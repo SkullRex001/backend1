@@ -1,19 +1,31 @@
 const asyncHandler=require("express-async-handler");
+const errorHandler=require("../middlewares/errorHandler");
 const bcrypt=require("bcrypt");
 const jwt=require("jsonwebtoken");
 const User=require("../models/userModel");
 const Registeruser=asyncHandler(async(req,res)=>{
+    console.log('hii')
     const{username,emailid,password}=req.body;
+    console.log(username)
     if(!username||!emailid||!password){
         res.status(400);
         throw new Error("All fields are mandatory!");
     }
-    const useravailable=User.findOne();
+    const useravailable= await User.findOne({
+        username : username
+    });
+    console.log(useravailable)
+
+    console.log()
     if(useravailable){
         res.status(400);
+        console.log('hii2')
+        res.send('user Already Exist')
         throw new Error("user already exists");
+        
+        
     }
-    const hashedpassword=bcrypt.hash(password,10);
+    const hashedpassword= await bcrypt.hash(password,10);
     console.log("Hashed passwordis:",hashedpassword);
     const user=await User.create({
         username,
