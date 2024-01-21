@@ -1,35 +1,35 @@
+const { constants } = require("../constants");
 
-const {constants}=require("../constants");
+const errorHandler = (err, req, res, next) => {
+  const statusCode = res.statusCode || 500;
 
-const errorHandler=(err,req,res,next)=>{
-    const statusCode=res.statusCode?res.statusCode:500;
-    switch (statusCode) {
-        case constants.NOT_FOUND:
-            res.json(
-            {title:"not found",
-            message:err.message,
-            stackTrace:err.stack} )
-            break;
-            case constants.UNAUTHORIZED:
-            res.json(
-            {title:"un authorized",
-            message:err.message,
-            stackTrace:err.stack} )
-            break;
-            case constants.FORBIDDEN:
-            res.json(
-            {title:"forbidden",
-            message:err.message,
-            stackTrace:err.stack} )
-            break;
-        
-        default:
-        console.log("no error! All good");
-        next();
-          break;
-    }
-    
-
+  switch (statusCode) {
+    case constants.NOT_FOUND:
+      res.status(constants.NOT_FOUND).json({
+        title: "Not Found",
+        message: err.message,
+        stackTrace: err.stack,
+      });
+      break;
+    case constants.UNAUTHORIZED:
+      res.status(constants.UNAUTHORIZED).json({
+        title: "Unauthorized",
+        message: err.message,
+        stackTrace: err.stack,
+      });
+      break;
+    case constants.FORBIDDEN:
+      res.status(constants.FORBIDDEN).json({
+        title: "Forbidden",
+        message: err.message,
+        stackTrace: err.stack,
+      });
+      break;
+    default:
+      console.log("No error! All good");
+      next(); // Continue to the next middleware
+      break;
+  }
 };
 
-module.exports=errorHandler;
+module.exports = errorHandler;

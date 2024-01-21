@@ -6,10 +6,14 @@ const {
     getContact,
     updateContact,
     deleteContact
-}=require("../controllers/contactControllers")
+}=require("../controllers/contactControllers");
+const validateToken = require("../middlewares/validateTokenHandler");
 
-router.route("/").get(getContacts).post(createContact);
-
-router.route("/:id").get(getContact).put(updateContact).delete(deleteContact);
+router.use(validateToken);
+router.get("/",getContacts);
+router.post("/",createContact);
+router.get("/:id",getContact);
+router.delete("/:id",deleteContact);
+router.patch("/:id",updateContact);
 
 module.exports = router;
