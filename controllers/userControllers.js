@@ -4,7 +4,7 @@ const bcrypt=require("bcrypt");
 const jwt=require("jsonwebtoken");
 const User=require("../models/userModel");
 const Registeruser=asyncHandler(async(req,res)=>{
-    console.log('hii')
+  
     const{username,emailid,password}=req.body;
     console.log(username)
     if(!username||!emailid||!password){
@@ -43,11 +43,13 @@ const Registeruser=asyncHandler(async(req,res)=>{
 });
 const loginuser=asyncHandler(async(req,res)=>{
     const {emailid,password}=req.body;
+    
     if(!emailid||!password){
         res.status(400);
         throw new Error("All fields are mandatory");
     }
     const user=await User.findOne({emailid});
+    
     if(user&&(await bcrypt.compare(password,user.password))){
         const accessToken=jwt.sign({
             user:{
@@ -56,7 +58,7 @@ const loginuser=asyncHandler(async(req,res)=>{
                 id:user.id,
             },
         },process.env.ACCESS_TOKEN,
-        {expiresIn:"15m"}
+        {expiresIn:"45m"}
         );
         res.status(200).json({accessToken});
     }else{
